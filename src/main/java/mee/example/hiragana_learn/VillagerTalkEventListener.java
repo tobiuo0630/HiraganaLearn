@@ -21,11 +21,14 @@ public class VillagerTalkEventListener implements Listener {
     private final ArrayList<JsonObject> mission;
     private final NamespacedKey explainedRuleKey;
     private final List<String> VillagerMessage;
+    private int missionNumber;
+    private JsonObject currentMission;
 
     public VillagerTalkEventListener(JavaPlugin plugin, ArrayList<JsonObject> mission){
         this.plugin = plugin;
         this.mission = mission;
         this.explainedRuleKey = new NamespacedKey(plugin,"explained_rule");
+        this.missionNumber = 0;
         this.VillagerMessage = Arrays.asList(
                 "§α[村人] §fこんにちは、わたしはむらたさん。",
                 "§α[村人] §fこれから、きみにはたからさがしをしてもらうよ。",
@@ -36,6 +39,7 @@ public class VillagerTalkEventListener implements Listener {
 
     @EventHandler
     private void VillagerTalkEvent(PlayerInteractEntityEvent event){
+
         if(!(event.getRightClicked() instanceof Villager)){
             return;
         }
@@ -46,9 +50,13 @@ public class VillagerTalkEventListener implements Listener {
         if(!data.has(explainedRuleKey, PersistentDataType.BYTE)){
             new DelayedMessageTask(plugin,player,VillagerMessage).runTaskTimer(plugin,0L,200L);
             data.set(explainedRuleKey,PersistentDataType.BYTE,(byte) 1);
+            currentMission = mission.get(missionNumber);
 
         }else{
-
+            if(currentMission.get("clear").getAsBoolean()){
+                missionNumber++;
+                currentMission = mission.get(missionNumber);
+            }
         }
     }
 
