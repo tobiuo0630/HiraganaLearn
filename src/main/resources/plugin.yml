@@ -1,0 +1,4 @@
+name: hiragana_learn
+version: '1.0-SNAPSHOT'
+main: mee.example.hiragana_learn.Hiragana_learn
+api-version: '1.20'
