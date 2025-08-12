@@ -14,16 +14,11 @@ import java.util.ArrayList;
 
 public class EventListener implements Listener {
     private final JavaPlugin plugin;
-    private final ArrayList<JsonObject> mission;
-    public boolean start = true;
 
-    public float start_x = -44.5f;
-    public float start_y = -11.0f;
-    public float start_z = 114.5f;
+    private boolean start = true;
 
     public EventListener(JavaPlugin plugin,ArrayList<JsonObject> mission){
         this.plugin = plugin;
-        this.mission = mission;
     }
 
     @EventHandler
@@ -34,14 +29,18 @@ public class EventListener implements Listener {
 
         if(start && block!=null && block.getType().name().contains("OAK_WALL_SIGN")){
             start = false;
-            start_player_teleport(player,world,start_x,start_y,start_z);
+            start_player_teleport(player,world);
         }
     }
 
 
     //スタート時実行関数
-    private void start_player_teleport(Player player,World world,float x,float y,float z){
-        Location start_location = new Location(world,x,y,z);
+    private void start_player_teleport(Player player,World world){
+        final float start_x = -44.5f;
+        final float start_y = -11.0f;
+        final float start_z = 114.5f;
+
+        Location start_location = new Location(world,start_x,start_y,start_z);
         start_location.setYaw(0f);
         start_location.setPitch(0f);
         player.teleport(start_location);
