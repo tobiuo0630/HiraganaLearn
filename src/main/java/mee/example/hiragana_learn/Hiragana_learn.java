@@ -17,20 +17,23 @@ public final class Hiragana_learn extends JavaPlugin {
         // Plugin startup logic
 
         String mission_file_name = "mission.json";
-        File mission_json = new File(getDataFolder(),mission_file_name);
+        File mission_json = new File(getDataFolder(), mission_file_name);
 
-        try(FileReader reader = new FileReader(mission_json)){
+        ArrayList<JsonObject> missionData = null;
+        try (FileReader reader = new FileReader(mission_json)) {
             Gson gson = new Gson();
-            JsonObject[] mission = gson.fromJson(reader,JsonObject[].class);
-            ArrayList<JsonObject> missionData = new ArrayList<>(Arrays.asList(mission));
-            for(JsonObject i: missionData){
+            JsonObject[] mission = gson.fromJson(reader, JsonObject[].class);
+            missionData = new ArrayList<>(Arrays.asList(mission));
+            for (JsonObject i : missionData) {
                 String name = i.get("name").getAsString();
-                getLogger().info("missionName:"+name);
+                getLogger().info("missionName:" + name);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             getLogger().severe("JSONの読み込みに失敗しました");
         }
+
+        getServer().getPluginManager().registerEvents(new EventListener(this, missionData), this);
     }
 
     @Override
