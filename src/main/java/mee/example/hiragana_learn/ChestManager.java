@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -39,41 +40,56 @@ public class ChestManager {
         );
     }
 
-    public void setupMissionChest(ItemStack correctItem,List<ItemStack> dummyItems){
-
-        clearAllChest();
+    public void setupMissionChest(Player player, ItemStack correctItem, List<ItemStack> dummyItems){
+        player.sendMessage("§e[デバッグ] setupMissionChestが呼び出されました。");
+        clearAllChest(player);
 
         List<Location> shuffledLocations = new ArrayList<>(this.chestLocations);
         Collections.shuffle(shuffledLocations);
 
-        setChestItem(shuffledLocations.get(0),correctItem);
+        player.sendMessage("§e[デバッグ] 正解アイテム: " + correctItem.getType().name());
+        setChestItem(shuffledLocations.get(0),correctItem,player);
 
         for(int i=0;i<dummyItems.size();i++){
             if(i+1 >= shuffledLocations.size()){
                 break;
             }
-            setChestItem(shuffledLocations.get(i+1),dummyItems.get(i));
+            player.sendMessage("§e[デバッグ] ダミーアイテム: " + dummyItems.get(i).getType().name());
+            setChestItem(shuffledLocations.get(i+1),dummyItems.get(i),player);
         }
     }
 
-    private void clearAllChest(){
+    private void clearAllChest(Player player){
+        int clearedCount = 0;
         for(Location loc: chestLocations){
-            Block block = loc.getBlock();
-            if(block.getState() instanceof Chest){
-                Chest chest = (Chest) block.getState();
-                chest.getInventory().clear();
+            if (loc.getChunk().isLoaded()) {
+                Block block = loc.getBlock();
+                if(block.getState() instanceof Chest){
+                    Chest chest = (Chest) block.getState();
+                    chest.getInventory().clear();
+                    clearedCount++;
+                }
             }
         }
+        player.sendMessage("§e[デバッグ] §fロード済みチャンク内の " + clearedCount + " 個のチェストを空にしました。");
     }
 
 
-    private void setChestItem(Location loc,ItemStack item){
+    private void setChestItem(Location loc,ItemStack item,Player player){
+        if (!loc.getChunk().isLoaded()) {
+            player.sendMessage("§c[デバッグ] §fチャンクがロードされていません: " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+            return;
+        }
+
         Block block = loc.getBlock();
         if(block.getState() instanceof Chest){
             Chest chest = (Chest) block.getState();
             chest.getInventory().clear();
             int randomSlot = (int) (Math.random() * chest.getInventory().getSize());
             chest.getInventory().setItem(randomSlot,item);
+            player.sendMessage("§a[デバッグ] §fアイテム設置完了: " + item.getType().name() + " at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
+        }else{
+            player.sendMessage("§c[デバッグ] §f指定座標にチェストがありません: " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ());
         }
     }
 }

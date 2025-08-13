@@ -2,6 +2,7 @@ package mee.example.hiragana_learn;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -31,6 +32,16 @@ public final class Hiragana_learn extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             getLogger().severe("JSONの読み込みに失敗しました");
+        }
+
+        PluginCommand resetCommand = this.getCommand("resetquest");
+
+        // コマンドがnullでないことを確認してからExecutorを設定する
+        if (resetCommand != null) {
+            resetCommand.setExecutor(new ResetDataCommand(this));
+        } else {
+            // もしコマンドが見つからなかった場合、コンソールにエラーを記録
+            getLogger().severe("コマンド 'resetquest' が plugin.yml に登録されていないため、有効化できませんでした。");
         }
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
