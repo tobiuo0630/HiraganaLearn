@@ -42,7 +42,7 @@ public class ChestManager {
 
     public void setupMissionChest(Player player, ItemStack correctItem, List<ItemStack> dummyItems){
         player.sendMessage("§e[デバッグ] setupMissionChestが呼び出されました。");
-        clearAllChest(player/);
+        clearAllChest(player);
 
         List<Location> shuffledLocations = new ArrayList<>(this.chestLocations);
         Collections.shuffle(shuffledLocations);
