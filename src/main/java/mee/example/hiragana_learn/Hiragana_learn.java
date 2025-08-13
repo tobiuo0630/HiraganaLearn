@@ -2,13 +2,14 @@ package mee.example.hiragana_learn;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public final class Hiragana_learn extends JavaPlugin {
 
@@ -19,7 +20,7 @@ public final class Hiragana_learn extends JavaPlugin {
         String mission_file_name = "mission.json";
         File mission_json = new File(getDataFolder(), mission_file_name);
 
-        ArrayList<JsonObject> missionData = null;
+        List<JsonObject> missionData = null;
         try (FileReader reader = new FileReader(mission_json)) {
             Gson gson = new Gson();
             JsonObject[] mission = gson.fromJson(reader, JsonObject[].class);
@@ -33,7 +34,21 @@ public final class Hiragana_learn extends JavaPlugin {
             getLogger().severe("JSONの読み込みに失敗しました");
         }
 
-        getServer().getPluginManager().registerEvents(new EventListener(this, missionData), this);
+        PluginCommand resetCommand = this.getCommand("resetquest");
+
+        // コマンドがnullでないことを確認してからExecutorを設定する
+        if (resetCommand != null) {
+            resetCommand.setExecutor(new ResetDataCommand(this));
+        } else {
+            // もしコマンドが見つからなかった場合、コンソールにエラーを記録
+            getLogger().severe("コマンド 'resetquest' が plugin.yml に登録されていないため、有効化できませんでした。");
+        }
+
+        getServer().getPluginManager().registerEvents(new EventListener(), this);
+
+        if(missionData != null){
+            getServer().getPluginManager().registerEvents(new VillagerTalkEventListener(this,missionData),this);
+        }
     }
 
     @Override
