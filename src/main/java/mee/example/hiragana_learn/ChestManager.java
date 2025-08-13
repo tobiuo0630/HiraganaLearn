@@ -2,8 +2,13 @@ package mee.example.hiragana_learn;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ChestManager {
@@ -32,5 +37,43 @@ public class ChestManager {
                 new Location(world,44,-3,140),//図書館
                 new Location(world,27,3,140)//屋上
         );
+    }
+
+    public void setupMissionChest(ItemStack correctItem,List<ItemStack> dummyItems){
+
+        clearAllChest();
+
+        List<Location> shuffledLocations = new ArrayList<>(this.chestLocations);
+        Collections.shuffle(shuffledLocations);
+
+        setChestItem(shuffledLocations.get(0),correctItem);
+
+        for(int i=0;i<dummyItems.size();i++){
+            if(i+1 >= shuffledLocations.size()){
+                break;
+            }
+            setChestItem(shuffledLocations.get(i+1),dummyItems.get(i));
+        }
+    }
+
+    private void clearAllChest(){
+        for(Location loc: chestLocations){
+            Block block = loc.getBlock();
+            if(block.getState() instanceof Chest){
+                Chest chest = (Chest) block.getState();
+                chest.getInventory().clear();
+            }
+        }
+    }
+
+
+    private void setChestItem(Location loc,ItemStack item){
+        Block block = loc.getBlock();
+        if(block.getState() instanceof Chest){
+            Chest chest = (Chest) block.getState();
+            chest.getInventory().clear();
+            int randomSlot = (int) (Math.random() * chest.getInventory().getSize());
+            chest.getInventory().setItem(randomSlot,item);
+        }
     }
 }

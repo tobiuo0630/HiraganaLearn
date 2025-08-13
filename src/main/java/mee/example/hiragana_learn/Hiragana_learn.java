@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public final class Hiragana_learn extends JavaPlugin {
 
@@ -19,7 +20,7 @@ public final class Hiragana_learn extends JavaPlugin {
         String mission_file_name = "mission.json";
         File mission_json = new File(getDataFolder(), mission_file_name);
 
-        ArrayList<JsonObject> missionData = null;
+        List<JsonObject> missionData = null;
         try (FileReader reader = new FileReader(mission_json)) {
             Gson gson = new Gson();
             JsonObject[] mission = gson.fromJson(reader, JsonObject[].class);
@@ -33,7 +34,7 @@ public final class Hiragana_learn extends JavaPlugin {
             getLogger().severe("JSONの読み込みに失敗しました");
         }
 
-        getServer().getPluginManager().registerEvents(new EventListener(this, missionData), this);
+        getServer().getPluginManager().registerEvents(new EventListener(this), this);
     }
 
     @Override

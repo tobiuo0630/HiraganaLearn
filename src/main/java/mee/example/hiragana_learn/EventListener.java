@@ -11,13 +11,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EventListener implements Listener {
     private final JavaPlugin plugin;
 
     private boolean start = true;
 
-    public EventListener(JavaPlugin plugin,ArrayList<JsonObject> mission){
+    public EventListener(JavaPlugin plugin){
         this.plugin = plugin;
     }
 
