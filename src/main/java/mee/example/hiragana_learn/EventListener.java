@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +21,7 @@ public class EventListener implements Listener {
         World world = player.getWorld();
 
         if(start && block!=null && block.getType().name().contains("OAK_WALL_SIGN")){
+
             start = false;
             start_player_teleport(player,world);
         }
@@ -40,4 +42,10 @@ public class EventListener implements Listener {
         player.sendTitle("ゲームスタート","クリアをめざそう",10,100,20);
     }
 
+
+    @EventHandler
+    public void onSignChange(SignChangeEvent event) {
+        // イベントをキャンセルして、看板の編集を防ぐ
+        event.setCancelled(true);
+    }
 }

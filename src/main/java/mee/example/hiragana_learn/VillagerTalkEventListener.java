@@ -54,11 +54,21 @@ public class VillagerTalkEventListener implements Listener {
     @EventHandler
     private void VillagerTalkEvent(PlayerInteractEntityEvent event){
 
-        if(!(event.getRightClicked() instanceof Villager)){
-            return;
-        }
 
         Player player = event.getPlayer();
+        player.sendMessage("§e[デバッグ1] §fonVillagerTalkイベント発生！");
+
+        if (event.getRightClicked() != null) {
+            String entityTypeName = event.getRightClicked().getType().name();
+            player.sendMessage("§e[デバッグ2] §fクリックしたエンティティ: " + entityTypeName);
+        }
+
+        if (!(event.getRightClicked() instanceof Villager)) {
+            return; // 村人以外ならここで処理を終了
+        }
+
+        player.sendMessage("§e[デバッグ3] §a村人との対話を開始します。");
+
         PersistentDataContainer data = player.getPersistentDataContainer();
 
         if(!data.has(explainedRuleKey, PersistentDataType.BYTE)){
@@ -67,7 +77,10 @@ public class VillagerTalkEventListener implements Listener {
 
             setupNewMission(player);
         }else{
-            if (currentMission == null) return;
+            if (currentMission == null){
+                player.sendMessage("§a[村人] §fまた何かあったらよろしくね！");
+                return;
+            }
 
             String correctItemName = currentMission.get("item").getAsString(); // JSONのキーを"item"に修正
             Material correctMaterial = Material.valueOf(correctItemName);
@@ -124,7 +137,8 @@ public class VillagerTalkEventListener implements Listener {
     private void setupNewMission(Player player){
         currentMission = mission.get(missionNumber);
 
-        String itemName = currentMission.get("itemId").getAsString();
+        String itemName = currentMission.get("item").getAsString();
+        player.sendMessage(itemName);
 
         try{
             Material correntMaterial = Material.valueOf(itemName);
