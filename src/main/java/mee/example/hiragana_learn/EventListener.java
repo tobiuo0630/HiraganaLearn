@@ -10,13 +10,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class EventListener implements Listener {
-    private final JavaPlugin plugin;
 
     private boolean start = true;
-
-    public EventListener(JavaPlugin plugin){
-        this.plugin = plugin;
-    }
 
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event){

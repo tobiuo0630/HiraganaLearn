@@ -2,9 +2,7 @@ package mee.example.hiragana_learn;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.bukkit.entity.Villager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.File;
 import java.io.FileReader;
@@ -35,7 +33,7 @@ public final class Hiragana_learn extends JavaPlugin {
             getLogger().severe("JSONの読み込みに失敗しました");
         }
 
-        getServer().getPluginManager().registerEvents(new EventListener(this), this);
+        getServer().getPluginManager().registerEvents(new EventListener(), this);
 
         if(missionData != null){
             getServer().getPluginManager().registerEvents(new VillagerTalkEventListener(this,missionData),this);
