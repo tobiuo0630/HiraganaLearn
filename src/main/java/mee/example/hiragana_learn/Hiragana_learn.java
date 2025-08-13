@@ -2,6 +2,7 @@ package mee.example.hiragana_learn;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.bukkit.entity.Villager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.units.qual.A;
 
@@ -35,6 +36,10 @@ public final class Hiragana_learn extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new EventListener(this), this);
+
+        if(missionData != null){
+            getServer().getPluginManager().registerEvents(new VillagerTalkEventListener(this,missionData),this);
+        }
     }
 
     @Override
