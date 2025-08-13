@@ -146,7 +146,7 @@ public class VillagerTalkEventListener implements Listener {
 
             List<ItemStack> dummyItems = Arrays.asList(new ItemStack(Material.DIRT), new ItemStack(Material.COBBLESTONE));
 
-            chestManager.setupMissionChest(correctItem, dummyItems);
+            chestManager.setupMissionChest(player,correctItem, dummyItems);
 
             String missionName = currentMission.get("name").getAsString();
             new DelayedMessageTask(plugin, player, Arrays.asList("§a[村人] §fつぎのおだいは…", "§e" + missionName + "！")).runTaskLater(plugin, 200L);

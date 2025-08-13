@@ -2,3 +2,9 @@ name: hiragana_learn
 version: '1.0-SNAPSHOT'
 main: mee.example.hiragana_learn.Hiragana_learn
 api-version: '1.20'
+
+commands:
+  resetquest:
+    description: "クエストの進行状況をリセットする"
+    usage: "/resetquest"
+    permission: op/
