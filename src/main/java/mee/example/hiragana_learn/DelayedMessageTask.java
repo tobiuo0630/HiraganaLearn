@@ -9,7 +9,7 @@ import java.util.List;
 public class DelayedMessageTask extends BukkitRunnable {
     private final Player player;
     private final List<String> messages;
-    private int messageIndex = 0; // 次に送信するメッセージのインデックス
+    private int messageIndex = 1; // 次に送信するメッセージのインデックス
 
     public DelayedMessageTask(JavaPlugin plugin, Player player, List<String> messages) {
         this.player = player;

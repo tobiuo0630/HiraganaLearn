@@ -8,11 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+
 
 public class EventListener implements Listener {
 
-    private boolean start = true;
+    private boolean start = true;//スタート開始判定初期値はtrue/始まるとfalse
 
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event){

@@ -44,7 +44,8 @@ public class VillagerTalkEventListener implements Listener {
                 "§α[村人] §fこんにちは、わたしはむらたさん。",
                 "§α[村人] §fこれから、きみにはたからさがしをしてもらうよ。",
                 "§α[村人] §fおだいのあいてむをここまでもってきてね。",
-                "§α[村人] §fじゅんびができたら、またはなしかけて"
+                "§α[村人] §fそれでは、ゲームスタート",
+                "§α[村人] §f最初のミッションは" + mission.get(0)
         );
 
         World mainWorld = Bukkit.getWorlds().get(0);
@@ -74,8 +75,6 @@ public class VillagerTalkEventListener implements Listener {
         if(!data.has(explainedRuleKey, PersistentDataType.BYTE)){
             new DelayedMessageTask(plugin,player,VillagerMessage).runTaskTimer(plugin,0L,200L);
             data.set(explainedRuleKey,PersistentDataType.BYTE,(byte) 1);
-
-            setupNewMission(player);
         }else{
             if (currentMission == null){
                 player.sendMessage("§a[村人] §fまた何かあったらよろしくね！");
@@ -104,32 +103,7 @@ public class VillagerTalkEventListener implements Listener {
                 // 次のミッションへ
                 setupNewMission(player);
 
-            } else {
-                // --- 不正解時の処理 ---
-                UUID playerUUID = player.getUniqueId();
-                int attempts = wrongAttempts.getOrDefault(playerUUID, 0) + 1;
-                wrongAttempts.put(playerUUID, attempts);
-
-                if (attempts >= MAX_WRONG_ATTEMPTS) {
-                    // 失敗回数が上限に達した
-                    player.sendMessage("§c[村人] §fざんねん…3かいまちがえてしまったね。");
-                    player.sendTitle("§cゲームオーバー", "§fまたちょうせんしてね", 10, 100, 20);
-
-                    // ゲームをリセットするなどの処理をここに追加（例：スタート地点に戻す）
-                    // EventListenerにあるテレポート処理を参考に実装できます
-
-                    wrongAttempts.remove(playerUUID); // カウントをリセット
-                    // 必要であれば、ミッション進行度もリセット
-                    // missionNumber = 0;
-
-                } else {
-                    // まだ挑戦できる
-                    int remaining = MAX_WRONG_ATTEMPTS - attempts;
-                    player.sendMessage("§c[村人] §fうーん、ちがうようだね。");
-                    player.sendMessage("§cのこり" + remaining + "かいまでまちがえられるよ。");
-                }
             }
-
         }
     }
 
@@ -149,7 +123,7 @@ public class VillagerTalkEventListener implements Listener {
             chestManager.setupMissionChest(player,correctItem, dummyItems);
 
             String missionName = currentMission.get("name").getAsString();
-            new DelayedMessageTask(plugin, player, Arrays.asList("§a[村人] §fつぎのおだいは…", "§e" + missionName + "！")).runTaskLater(plugin, 200L);
+            new DelayedMessageTask(plugin, player, Arrays.asList("§a[村人] §fつぎのおだいは…"+"§e" + missionName + "！","1")).runTaskLater(plugin, 200L);
 
         }catch (IllegalArgumentException e) {
             // Material.valueOfで指定された名前のMaterialが見つからなかった場合のエラー処理
